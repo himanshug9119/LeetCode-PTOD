@@ -1,0 +1,38 @@
+class Solution {
+public:
+    vector<int> fullBloomFlowers(vector<vector<int>>& f, vector<int>& p) {
+        // brute force solution
+        // int n = p.size();
+        // int m = f.size();
+        // vector<int>ans(n);
+        // for(int i=0; i<n; i++){
+        //     int count = 0;
+        //     for (int j=0; j<m; j++){
+        //         if(f[j][0]<=p[i] && p[i]<=f[j][1])
+        //             count++;
+        //     }
+        //     ans[i] = count;
+        // }
+        // return ans;
+        // expected approach
+        int n = p.size();
+        int m = f.size();
+        vector<int>ans(n);
+        vector<pair<int,int>> temp;
+        for(int i=0; i<n; i++) temp.push_back({p[i], i});
+        sort(temp.begin(), temp.end());
+        sort(f.begin(), f.end());
+        priority_queue<int , vector<int> , greater<int>>pq;
+        int l=0;
+        for(int i=0; i<n; i++){
+            while(l<m && temp[i].first >= f[l][0]){
+                pq.push(f[l][1]);
+                l++;
+            }
+            while(!pq.empty() && pq.top() < temp[i].first)
+                pq.pop();
+            ans[temp[i].second] = pq.size();
+        }
+        return ans;
+    }
+};
