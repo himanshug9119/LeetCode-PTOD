@@ -1,0 +1,64 @@
+/**
+ * // This is the MountainArray's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class MountainArray {
+ *   public:
+ *     int get(int index);
+ *     int length();
+ * };
+ */
+
+class Solution {
+    int getMIndex(MountainArray &m ){
+        int low = 0, high = m.length()-1;
+        while(low<=high){
+            int mid = low +  (high-low)/2;
+            int x = m.get(mid-1);
+            int y = m.get(mid);
+            int z = m.get(mid+1);
+            if(y>z && y>x){
+                return mid;
+            }else if(x<y){
+                low = mid+1;
+            }else if(y>z){
+                high = mid;
+            }
+        }
+        return -1;
+    }
+    int binarySearch(int peak, MountainArray &m , int target, bool left){
+        int low, high;
+        if(left){
+            low = 0;
+            high = peak-1;
+        }else{
+            low = peak+1;
+            high = m.length()-1;
+        }
+        while(low<=high){
+            int mid = low+(high-low)/2;
+            int mid_data = m.get(mid);
+            if(mid_data==target){
+                return mid;
+            }else if((mid_data < target && left) || (mid_data > target && !left)){
+                low =  mid+1;
+            }else{
+                high = mid-1;
+            }
+        }
+        return -1;
+    }
+public:
+    int findInMountainArray(int target, MountainArray &m) {
+        int peak = getMIndex(m);
+        if(target == m.get(peak)){
+            return peak;
+        }
+        // check in left half of peak;
+        int minindex = binarySearch(peak , m , target, true);
+        if(minindex != -1) return minindex;
+        // check into the right half subarray
+        minindex = binarySearch(peak , m , target, false);
+        return minindex; 
+    }
+};
