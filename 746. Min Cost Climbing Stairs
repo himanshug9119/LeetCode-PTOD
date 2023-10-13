@@ -1,0 +1,46 @@
+class Solution {
+public:
+    int solveBrute(vector<int> & cost , int index){
+        int n = cost.size();
+        if(n<=index){
+            return 0;
+        }
+        int first = cost[index] +  solveBrute(cost , index+1);
+        int second = cost[index] + solveBrute(cost , index + 2);
+        return  min(first, second);
+    }
+    int solveDP(vector<int>&cost , int index, vector<int>&dp){
+        int n = cost.size();
+        if(n<=index){
+            return 0;
+        }
+        if(dp[index] != -1) return dp[index];
+        int first = cost[index] +  solveDP(cost , index+1, dp);
+        int second = cost[index] + solveDP(cost , index + 2 , dp);
+        return dp[index] = min(first, second);
+    }
+    int solveTab(vector<int>&cost){
+        for(int i=2; i<cost.size(); i++){
+            cost[i] = min(cost[i-2] , cost[i-1]) + cost[i];
+        }
+        
+        return min(cost[cost.size()-1] , cost[cost.size()-2]);
+    }
+    int minCostClimbingStairs(vector<int>& cost) {
+        // using bruteforce 
+        // int x = solve(cost, 0, dp);
+        // dp.clear();
+        // int y = solve(cost , 1,dp);
+        // return min(x, y);
+
+        // dp solution
+        // vector<int>dp(cost.size()+1, -1);
+        // int x = solveDP(cost, 0, dp);
+        // dp.clear();
+        // int y = solveDP(cost , 1,dp);
+        // return min(x, y);
+
+        // using tabulation method
+        return solveTab(cost);
+    }
+};
